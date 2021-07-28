@@ -1,4 +1,4 @@
-module Utils.Update exposing (..)
+module Platform.Update exposing (..)
 
 
 multiple : (msg -> model -> ( model, Cmd msg )) -> List msg -> model -> ( model, Cmd msg )
