@@ -1,4 +1,4 @@
-module Utils.Resolver exposing (..)
+module Http.Resolver exposing (..)
 
 import Http
 import Json.Decode as Decode
