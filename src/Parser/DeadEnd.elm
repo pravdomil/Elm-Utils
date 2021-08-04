@@ -55,8 +55,8 @@ toStringHelper a =
         P.BadRepeat ->
             "Bad repeat"
     )
-        ++ " at row "
+        ++ " at "
         ++ String.fromInt a.row
-        ++ ", col "
+        ++ ":"
         ++ String.fromInt a.col
         ++ "."
