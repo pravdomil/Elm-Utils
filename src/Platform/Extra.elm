@@ -3,8 +3,8 @@ module Platform.Extra exposing (..)
 import Task
 
 
-multiple : (msg -> model -> ( model, Cmd msg )) -> List msg -> model -> ( model, Cmd msg )
-multiple updateFn msgs model =
+updateMultiple : (msg -> model -> ( model, Cmd msg )) -> List msg -> model -> ( model, Cmd msg )
+updateMultiple updateFn msgs model =
     msgs
         |> List.foldl
             (\msg ( model_, cmds ) ->
