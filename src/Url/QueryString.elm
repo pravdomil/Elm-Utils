@@ -40,5 +40,11 @@ build : QueryString -> String
 build a =
     a
         |> Dict.toList
+        |> buildFromList
+
+
+buildFromList : List ( String, String ) -> String
+buildFromList a =
+    a
         |> List.map (\( k, v ) -> Builder.string k v)
         |> Builder.relative [ "." ]
