@@ -1,8 +1,8 @@
 module List.Extra exposing (..)
 
 
-uncons : List a -> Maybe ( a, List a )
-uncons a =
+headAndTail : List a -> Maybe ( a, List a )
+headAndTail a =
     case a of
         [] ->
             Nothing
