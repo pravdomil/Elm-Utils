@@ -61,15 +61,14 @@ type alias VirtualList a =
         , top : Int
         , bottom : Int
         }
-    , items : Items a
+    , items : List (Item a)
     }
 
 
-type alias Items a =
-    List
-        { size : Int
-        , value : a
-        }
+type alias Item a =
+    { size : Int
+    , value : a
+    }
 
 
 step =
@@ -92,14 +91,14 @@ compute a =
                 , paddingTop : Int
                 , paddingBottom : Int
                 , usePaddingBottom : Bool
-                , items : Items a
+                , items : List (Item a)
                 }
             ->
                 { offset : Int
                 , paddingTop : Int
                 , paddingBottom : Int
                 , usePaddingBottom : Bool
-                , items : Items a
+                , items : List (Item a)
                 }
         fold b acc =
             let
