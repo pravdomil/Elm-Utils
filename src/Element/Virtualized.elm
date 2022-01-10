@@ -93,20 +93,8 @@ compute a =
 
         fold :
             a
-            ->
-                { offset : Int
-                , paddingTop : Int
-                , paddingBottom : Int
-                , usePaddingBottom : Bool
-                , items : List (Item a)
-                }
-            ->
-                { offset : Int
-                , paddingTop : Int
-                , paddingBottom : Int
-                , usePaddingBottom : Bool
-                , items : List (Item a)
-                }
+            -> { offset : Int, paddingTop : Int, paddingBottom : Int, items : List (Item a) }
+            -> { offset : Int, paddingTop : Int, paddingBottom : Int, items : List (Item a) }
         fold b acc =
             let
                 itemSize : Int
@@ -116,20 +104,19 @@ compute a =
             if offsetVisible { min = acc.offset, max = acc.offset + itemSize } then
                 { acc
                     | offset = acc.offset + itemSize
-                    , usePaddingBottom = True
                     , items = { size = itemSize, value = b } :: acc.items
                 }
 
-            else if acc.usePaddingBottom then
+            else if List.head acc.items == Nothing then
                 { acc
                     | offset = acc.offset + itemSize
-                    , paddingBottom = acc.paddingBottom + itemSize
+                    , paddingTop = acc.paddingTop + itemSize
                 }
 
             else
                 { acc
                     | offset = acc.offset + itemSize
-                    , paddingTop = acc.paddingTop + itemSize
+                    , paddingBottom = acc.paddingBottom + itemSize
                 }
     in
     a.data
@@ -137,7 +124,6 @@ compute a =
             { offset = a.paddingTop
             , paddingTop = a.paddingTop
             , paddingBottom = a.paddingBottom
-            , usePaddingBottom = False
             , items = []
             }
         |> (\v ->
