@@ -71,7 +71,7 @@ type alias Item a =
     }
 
 
-step =
+viewportSize =
     1000
 
 
@@ -80,8 +80,8 @@ compute a =
     let
         offsetVisible =
             intersects
-                { min = a.scrollOffset - step
-                , max = a.scrollOffset + step + step
+                { min = a.scrollOffset - viewportSize
+                , max = a.scrollOffset + viewportSize + viewportSize
                 }
 
         fold :
@@ -156,7 +156,7 @@ onScroll actual toMsg =
         decoder : Decode.Decoder msg
         decoder =
             Decode.at [ "target", "scrollTop" ] Decode.float
-                |> Decode.map (\v -> round (v / step) * step)
+                |> Decode.map (\v -> round (v / viewportSize) * viewportSize)
                 |> Decode.andThen
                     (\v ->
                         if v == actual then
