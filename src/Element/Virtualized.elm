@@ -1,9 +1,13 @@
-module Element.Virtualized exposing (column)
+module Element.Virtualized exposing (ScrollOffset(..), column)
 
 import Element as E
 import Element.Keyed
 import Html.Events
 import Json.Decode as Decode
+
+
+type ScrollOffset
+    = ScrollOffset Int
 
 
 column :
@@ -14,9 +18,9 @@ column :
         , toSize : a -> Int
         , paddingTop : Int
         , paddingBottom : Int
-        , scrollOffset : Int
+        , scrollOffset : ScrollOffset
         , view : a -> E.Element msg
-        , onScroll : Int -> msg
+        , onScroll : ScrollOffset -> msg
         }
     -> E.Element msg
 column attrs a =
@@ -75,13 +79,16 @@ viewportSize =
     1000
 
 
-compute : { b | data : List a, toSize : a -> Int, paddingTop : Int, paddingBottom : Int, scrollOffset : Int } -> VirtualList a
+compute : { b | data : List a, toSize : a -> Int, paddingTop : Int, paddingBottom : Int, scrollOffset : ScrollOffset } -> VirtualList a
 compute a =
     let
+        scrollOffset =
+            a.scrollOffset |> (\(ScrollOffset v) -> v)
+
         offsetVisible =
             intersects
-                { min = a.scrollOffset - viewportSize
-                , max = a.scrollOffset + viewportSize + viewportSize
+                { min = scrollOffset - viewportSize
+                , max = scrollOffset + viewportSize + viewportSize
                 }
 
         fold :
@@ -150,8 +157,8 @@ intersects a b =
     (b.min <= a.max) && (b.max >= a.min)
 
 
-onScroll : Int -> (Int -> msg) -> E.Attribute msg
-onScroll actual toMsg =
+onScroll : ScrollOffset -> (ScrollOffset -> msg) -> E.Attribute msg
+onScroll (ScrollOffset actual) toMsg =
     let
         decoder : Decode.Decoder msg
         decoder =
@@ -165,6 +172,6 @@ onScroll actual toMsg =
                         else
                             Decode.succeed v
                     )
-                |> Decode.map toMsg
+                |> Decode.map (ScrollOffset >> toMsg)
     in
     E.htmlAttribute (Html.Events.on "scroll" decoder)
