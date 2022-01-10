@@ -28,8 +28,8 @@ find isOk a =
                 find isOk rest
 
 
-previousCurrentNext : (a -> Bool) -> List a -> { previous : Maybe a, current : Maybe a, next : Maybe a }
-previousCurrentNext isCurrent a =
+findPreviousCurrentNext : (a -> Bool) -> List a -> { previous : Maybe a, current : Maybe a, next : Maybe a }
+findPreviousCurrentNext isCurrent a =
     let
         find_ : Maybe a -> List a -> Maybe { previous : Maybe a, current : Maybe a, next : Maybe a }
         find_ previous b =
