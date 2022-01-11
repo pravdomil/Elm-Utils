@@ -2,15 +2,14 @@ module Url.QueryString exposing (..)
 
 import Dict
 import Url
-import Url.Builder as Builder
 
 
 type alias QueryString =
     Dict.Dict String String
 
 
-parse : Url.Url -> QueryString
-parse a =
+fromString : String -> QueryString
+fromString a =
     let
         parseParam : String -> Maybe ( String, String )
         parseParam b =
@@ -28,23 +27,23 @@ parse a =
                 _ ->
                     Nothing
     in
-    case a.query |> Maybe.withDefault "" of
-        "" ->
+    case a |> String.split "&" of
+        [] ->
             Dict.empty
 
         b ->
-            b |> String.split "&" |> List.filterMap parseParam |> Dict.fromList
+            b |> List.filterMap parseParam |> Dict.fromList
 
 
-build : QueryString -> String
-build a =
+toString : QueryString -> String
+toString a =
     a
         |> Dict.toList
-        |> buildFromList
+        |> toStringFromList
 
 
-buildFromList : List ( String, String ) -> String
-buildFromList a =
+toStringFromList : List ( String, String ) -> String
+toStringFromList a =
     a
-        |> List.map (\( k, v ) -> Builder.string k v)
-        |> Builder.relative [ "." ]
+        |> List.map (\( k, v ) -> Url.percentEncode k ++ "=" ++ Url.percentEncode v)
+        |> String.join "&"
