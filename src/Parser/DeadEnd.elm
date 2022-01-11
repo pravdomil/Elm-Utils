@@ -3,15 +3,8 @@ module Parser.DeadEnd exposing (..)
 import Parser as P
 
 
-{-| See <https://github.com/elm/parser/pull/16>.
--}
-toString : List P.DeadEnd -> String
+toString : P.DeadEnd -> String
 toString a =
-    a |> List.map toStringHelper |> String.join "\n"
-
-
-toStringHelper : P.DeadEnd -> String
-toStringHelper a =
     (case a.problem of
         P.Expecting b ->
             "Expecting \"" ++ b ++ "\""
@@ -60,3 +53,10 @@ toStringHelper a =
         ++ ":"
         ++ String.fromInt a.col
         ++ "."
+
+
+{-| See <https://github.com/elm/parser/pull/16>.
+-}
+listToString : List P.DeadEnd -> String
+listToString a =
+    a |> List.map toString |> String.join "\n"
