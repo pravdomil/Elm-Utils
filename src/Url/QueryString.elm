@@ -35,6 +35,13 @@ fromString a =
             b |> List.filterMap parseParam |> Dict.fromList
 
 
+fromUrl : Url.Url -> QueryString
+fromUrl a =
+    a.query
+        |> Maybe.map fromString
+        |> Maybe.withDefault Dict.empty
+
+
 toString : QueryString -> String
 toString a =
     a
