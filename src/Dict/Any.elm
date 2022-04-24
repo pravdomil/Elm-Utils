@@ -5,6 +5,7 @@ module Dict.Any exposing
     , keys, values, toList, fromList
     , map, foldl, foldr, filter, partition
     , union, intersect, diff, merge
+    , foldlByOrder, foldrByOrder
     )
 
 {-| A dictionary mapping unique keys to values.
@@ -34,7 +35,7 @@ Derived from elm/core@1.0.5 Dict module.
 
 # Transform
 
-@docs map, foldl, foldr, filter, partition
+@docs map, foldl, foldlWithOrder, foldr, foldrWithOrder, filter, partition
 
 
 # Combine
@@ -554,6 +555,26 @@ foldl func acc dict =
             foldl func (func key value (foldl func acc left)) right
 
 
+{-| <https://github.com/elm/core/issues/1109>
+-}
+foldlByOrder : (k -> Order) -> (k -> v -> a -> a) -> a -> Dict k v -> a
+foldlByOrder toOrder fn acc a =
+    case a of
+        RBEmpty_elm_builtin ->
+            acc
+
+        RBNode_elm_builtin _ k v left right ->
+            case toOrder k of
+                LT ->
+                    foldlByOrder toOrder fn acc left
+
+                EQ ->
+                    foldlByOrder toOrder fn (fn k v (foldlByOrder toOrder fn acc left)) right
+
+                GT ->
+                    foldlByOrder toOrder fn acc right
+
+
 {-| Fold over the key-value pairs in a dictionary from highest key to lowest key.
 
     import Dict exposing (Dict)
@@ -577,6 +598,26 @@ foldr func acc t =
 
         RBNode_elm_builtin _ key value left right ->
             foldr func (func key value (foldr func acc right)) left
+
+
+{-| <https://github.com/elm/core/issues/1109>
+-}
+foldrByOrder : (k -> Order) -> (k -> v -> a -> a) -> a -> Dict k v -> a
+foldrByOrder toOrder fn acc a =
+    case a of
+        RBEmpty_elm_builtin ->
+            acc
+
+        RBNode_elm_builtin _ k v left right ->
+            case toOrder k of
+                LT ->
+                    foldrByOrder toOrder fn acc left
+
+                EQ ->
+                    foldrByOrder toOrder fn (fn k v (foldrByOrder toOrder fn acc right)) left
+
+                GT ->
+                    foldrByOrder toOrder fn acc right
 
 
 {-| Keep only the key-value pairs that pass the given test.
