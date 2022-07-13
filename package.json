@@ -1,3 +1,6 @@
 {
-  "name": "elm-utils"
+  "name": "elm-utils",
+  "devDependencies": {
+    "elm-codec": "github:pravdomil/elm-codec"
+  }
 }

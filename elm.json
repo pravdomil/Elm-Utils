@@ -1,7 +1,8 @@
 {
     "type": "application",
     "source-directories": [
-        "src"
+        "src",
+        "node_modules/elm-codec/src"
     ],
     "elm-version": "0.19.1",
     "dependencies": {
@@ -14,8 +15,7 @@
             "elm/parser": "1.1.0",
             "elm/time": "1.0.0",
             "elm/url": "1.0.0",
-            "mdgriffith/elm-ui": "1.1.8",
-            "miniBill/elm-codec": "2.0.0"
+            "mdgriffith/elm-ui": "1.1.8"
         },
         "indirect": {
             "elm/bytes": "1.0.8",
