@@ -6,10 +6,6 @@ import Html.Events
 import Json.Decode
 
 
-type ScrollOffset
-    = ScrollOffset Int
-
-
 column :
     List (E.Attribute msg)
     ->
@@ -52,6 +48,14 @@ column attrs a =
                     )
             )
         )
+
+
+
+--
+
+
+type ScrollOffset
+    = ScrollOffset Int
 
 
 
