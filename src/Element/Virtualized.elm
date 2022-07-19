@@ -26,18 +26,9 @@ column attrs a =
             compute a
     in
     el
-        (width fill
-            :: height fill
-            :: scrollbars
-            :: onScroll a.scrollOffset a.onScroll
-            :: attrs
-        )
+        (width fill :: height fill :: scrollbars :: onScroll a.scrollOffset a.onScroll :: attrs)
         (Element.Keyed.column
-            (width fill
-                :: paddingEach list.padding
-                :: spacing 0
-                :: []
-            )
+            (width fill :: paddingEach list.padding :: spacing 0 :: [])
             (list.items
                 |> List.map
                     (\v ->
