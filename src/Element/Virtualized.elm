@@ -96,7 +96,7 @@ compute a =
             let
                 itemSize : Int
                 itemSize =
-                    a.toSize b
+                    max 0 (a.toSize b)
             in
             if offsetVisible { min = acc.offset, max = acc.offset + itemSize } then
                 { acc
