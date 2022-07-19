@@ -146,7 +146,7 @@ onScroll (ScrollOffset actual) toMsg =
         decoder : Json.Decode.Decoder msg
         decoder =
             Json.Decode.at [ "target", "scrollTop" ] Json.Decode.float
-                |> Json.Decode.map (\v -> round (v / viewportSize) * viewportSize)
+                |> Json.Decode.map (\x -> round (x / viewportSize) * viewportSize)
                 |> Json.Decode.andThen
                     (\v ->
                         if v == actual then
