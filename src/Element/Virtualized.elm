@@ -1,13 +1,13 @@
 module Element.Virtualized exposing (ScrollOffset(..), column)
 
-import Element as E
+import Element exposing (..)
 import Element.Keyed
 import Html.Events
 import Json.Decode
 
 
 column :
-    List (E.Attribute msg)
+    List (Attribute msg)
     ->
         { data : List a
         , toKey : a -> String
@@ -15,35 +15,35 @@ column :
         , paddingTop : Int
         , paddingBottom : Int
         , scrollOffset : ScrollOffset
-        , view : a -> E.Element msg
+        , view : a -> Element msg
         , onScroll : ScrollOffset -> msg
         }
-    -> E.Element msg
+    -> Element msg
 column attrs a =
     let
         list : VirtualList a
         list =
             compute a
     in
-    E.el
-        (E.width E.fill
-            :: E.height E.fill
-            :: E.scrollbars
+    el
+        (width fill
+            :: height fill
+            :: scrollbars
             :: onScroll a.scrollOffset a.onScroll
             :: attrs
         )
         (Element.Keyed.column
-            (E.width E.fill
-                :: E.height E.fill
-                :: E.paddingEach list.padding
-                :: E.spacing 0
+            (width fill
+                :: height fill
+                :: paddingEach list.padding
+                :: spacing 0
                 :: []
             )
             (list.items
                 |> List.map
                     (\v ->
                         ( a.toKey v.value
-                        , E.el [ E.width E.fill, E.height (E.px v.size) ] (a.view v.value)
+                        , el [ width fill, height (px v.size) ] (a.view v.value)
                         )
                     )
             )
@@ -147,7 +147,7 @@ intersects a b =
     (b.min <= a.max) && (b.max >= a.min)
 
 
-onScroll : ScrollOffset -> (ScrollOffset -> msg) -> E.Attribute msg
+onScroll : ScrollOffset -> (ScrollOffset -> msg) -> Attribute msg
 onScroll (ScrollOffset actual) toMsg =
     let
         decoder : Json.Decode.Decoder msg
@@ -164,4 +164,4 @@ onScroll (ScrollOffset actual) toMsg =
                     )
                 |> Json.Decode.map (ScrollOffset >> toMsg)
     in
-    E.htmlAttribute (Html.Events.on "scroll" decoder)
+    htmlAttribute (Html.Events.on "scroll" decoder)
