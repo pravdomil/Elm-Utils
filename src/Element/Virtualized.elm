@@ -34,7 +34,6 @@ column attrs a =
         )
         (Element.Keyed.column
             (width fill
-                :: height fill
                 :: paddingEach list.padding
                 :: spacing 0
                 :: []
