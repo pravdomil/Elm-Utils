@@ -101,7 +101,7 @@ compute a =
                     , items = { size = itemSize, value = b } :: acc.items
                 }
 
-            else if List.head acc.items == Nothing then
+            else if acc.items == [] then
                 { acc
                     | offset = acc.offset + itemSize
                     , paddingTop = acc.paddingTop + itemSize
