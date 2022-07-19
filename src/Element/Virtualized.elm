@@ -97,20 +97,20 @@ compute a =
             in
             if offsetVisible { min = acc.offset, max = acc.offset + itemSize } then
                 { acc
-                    | offset = acc.offset + itemSize
-                    , items = { size = itemSize, value = b } :: acc.items
+                    | items = { size = itemSize, value = b } :: acc.items
+                    , offset = acc.offset + itemSize
                 }
 
             else if acc.items == [] then
                 { acc
-                    | offset = acc.offset + itemSize
-                    , paddingTop = acc.paddingTop + itemSize
+                    | paddingTop = acc.paddingTop + itemSize
+                    , offset = acc.offset + itemSize
                 }
 
             else
                 { acc
-                    | offset = acc.offset + itemSize
-                    , paddingBottom = acc.paddingBottom + itemSize
+                    | paddingBottom = acc.paddingBottom + itemSize
+                    , offset = acc.offset + itemSize
                 }
     in
     a.data
