@@ -69,6 +69,7 @@ type alias Item a =
     }
 
 
+viewportSize : number
 viewportSize =
     1000
 
@@ -76,9 +77,11 @@ viewportSize =
 compute : { b | data : List a, toSize : a -> Int, paddingTop : Int, paddingBottom : Int, scrollOffset : ScrollOffset } -> VirtualList a
 compute a =
     let
+        scrollOffset : Int
         scrollOffset =
             a.scrollOffset |> (\(ScrollOffset v) -> v)
 
+        offsetVisible : { min : Int, max : Int } -> Bool
         offsetVisible =
             intersects
                 { min = scrollOffset - viewportSize
