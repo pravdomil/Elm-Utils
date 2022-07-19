@@ -3,7 +3,7 @@ module Element.Virtualized exposing (ScrollOffset(..), column)
 import Element as E
 import Element.Keyed
 import Html.Events
-import Json.Decode as Decode
+import Json.Decode
 
 
 type ScrollOffset
@@ -146,18 +146,18 @@ intersects a b =
 onScroll : ScrollOffset -> (ScrollOffset -> msg) -> E.Attribute msg
 onScroll (ScrollOffset actual) toMsg =
     let
-        decoder : Decode.Decoder msg
+        decoder : Json.Decode.Decoder msg
         decoder =
-            Decode.at [ "target", "scrollTop" ] Decode.float
-                |> Decode.map (\v -> round (v / viewportSize) * viewportSize)
-                |> Decode.andThen
+            Json.Decode.at [ "target", "scrollTop" ] Json.Decode.float
+                |> Json.Decode.map (\v -> round (v / viewportSize) * viewportSize)
+                |> Json.Decode.andThen
                     (\v ->
                         if v == actual then
-                            Decode.fail "Scroll offset not changed."
+                            Json.Decode.fail "Scroll offset not changed."
 
                         else
-                            Decode.succeed v
+                            Json.Decode.succeed v
                     )
-                |> Decode.map (ScrollOffset >> toMsg)
+                |> Json.Decode.map (ScrollOffset >> toMsg)
     in
     E.htmlAttribute (Html.Events.on "scroll" decoder)
