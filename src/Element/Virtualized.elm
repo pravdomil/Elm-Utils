@@ -25,6 +25,7 @@ column :
                 , body : Element msg
                 }
         , view : Int -> a -> Element msg
+        , noData : () -> Element msg
         , onScroll : ScrollOffset -> msg
         }
     -> Element msg
@@ -71,13 +72,18 @@ column attrs a =
                 ++ [ ( "zps6-header", header )
                    , ( "zps6-top", el [ height (px list.top) ] none )
                    ]
-                ++ (list.items
-                        |> List.map
-                            (\x ->
-                                ( a.toKey x.value
-                                , el [ width fill, height (px x.size) ] (a.view x.index x.value)
+                ++ (if list.items == [] then
+                        [ ( "zps6-data", a.noData () )
+                        ]
+
+                    else
+                        list.items
+                            |> List.map
+                                (\x ->
+                                    ( a.toKey x.value
+                                    , el [ width fill, height (px x.size) ] (a.view x.index x.value)
+                                    )
                                 )
-                            )
                    )
                 ++ [ ( "zps6-bottom", el [ height (px list.bottom) ] none )
                    , ( "zps6-footer", footer )
