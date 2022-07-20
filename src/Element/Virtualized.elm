@@ -16,7 +16,7 @@ column :
         , scrollOffset : ScrollOffset
         , header : Maybe ( Int, Element msg )
         , footer : Maybe ( Int, Element msg )
-        , view : a -> Element msg
+        , view : Int -> a -> Element msg
         , onScroll : ScrollOffset -> msg
         }
     -> Element msg
@@ -67,7 +67,7 @@ column attrs a =
                         |> List.map
                             (\x ->
                                 ( a.toKey x.value
-                                , el [ width fill, height (px x.size) ] (a.view x.value)
+                                , el [ width fill, height (px x.size) ] (a.view x.index x.value)
                                 )
                             )
                    )
@@ -98,7 +98,8 @@ type alias VirtualList a =
 
 
 type alias Item a =
-    { size : Int
+    { index : Int
+    , size : Int
     , value : a
     }
 
@@ -118,27 +119,28 @@ compute data toSize startOffset (ScrollOffset scrollOffset) =
                 , max = scrollOffset + viewportSize + viewportSize
                 }
 
-        fold : a -> ( VirtualList a, Int ) -> ( VirtualList a, Int )
-        fold b ( acc, offset ) =
+        fold : a -> ( VirtualList a, Int, Int ) -> ( VirtualList a, Int, Int )
+        fold b ( acc, i, offset ) =
             let
                 size : Int
                 size =
                     max 0 (toSize b)
             in
             ( if offsetVisible { min = offset, max = offset + size } then
-                { acc | items = { size = size, value = b } :: acc.items }
+                { acc | items = { index = i, size = size, value = b } :: acc.items }
 
               else if acc.items == [] then
                 { acc | top = acc.top + size }
 
               else
                 { acc | bottom = acc.bottom + size }
+            , i + 1
             , offset + size
             )
     in
     data
-        |> List.foldl fold ( VirtualList [] 0 0, startOffset )
-        |> (\( x, _ ) -> { x | items = List.reverse x.items })
+        |> List.foldl fold ( VirtualList [] 0 0, 0, startOffset )
+        |> (\( x, _, _ ) -> { x | items = List.reverse x.items })
 
 
 intersects : { min : number, max : number } -> { min : number, max : number } -> Bool
