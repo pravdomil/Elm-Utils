@@ -14,8 +14,8 @@ column :
         , toKey : a -> String
         , toSize : a -> Int
         , scrollOffset : ScrollOffset
-        , header : Maybe ( Int, Element msg )
-        , footer : Maybe ( Int, Element msg )
+        , header : Maybe { height : Int, body : Element msg }
+        , footer : Maybe { height : Int, body : Element msg }
         , view : Int -> a -> Element msg
         , onScroll : ScrollOffset -> msg
         }
@@ -27,21 +27,21 @@ column attrs a =
             compute
                 a.data
                 a.toSize
-                (a.header |> Maybe.map Tuple.first |> Maybe.withDefault 0)
+                (a.header |> Maybe.map .height |> Maybe.withDefault 0)
                 a.scrollOffset
 
         header : Element msg
         header =
             case a.header of
-                Just ( b, c ) ->
+                Just b ->
                     el
                         [ width fill
-                        , height (px b)
+                        , height (px b.height)
                         , htmlAttribute (Html.Attributes.style "position" "sticky")
                         , htmlAttribute (Html.Attributes.style "z-index" "1")
                         , htmlAttribute (Html.Attributes.style "top" "0")
                         ]
-                        c
+                        b.body
 
                 Nothing ->
                     none
@@ -49,8 +49,8 @@ column attrs a =
         footer : Element msg
         footer =
             case a.footer of
-                Just ( b, c ) ->
-                    el [ width fill, height (px b) ] c
+                Just b ->
+                    el [ width fill, height (px b.height) ] b.body
 
                 Nothing ->
                     none
