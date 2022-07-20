@@ -38,6 +38,7 @@ column attrs a =
                         [ width fill
                         , height (px b)
                         , htmlAttribute (Html.Attributes.style "position" "sticky")
+                        , htmlAttribute (Html.Attributes.style "z-index" "1")
                         , htmlAttribute (Html.Attributes.style "top" "0")
                         ]
                         c
