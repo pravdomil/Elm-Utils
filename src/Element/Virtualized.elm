@@ -14,8 +14,16 @@ column :
         , toKey : a -> String
         , toSize : a -> Int
         , scrollOffset : ScrollOffset
-        , header : Maybe { height : Int, body : Element msg }
-        , footer : Maybe { height : Int, body : Element msg }
+        , header :
+            Maybe
+                { height : Int
+                , body : Element msg
+                }
+        , footer :
+            Maybe
+                { height : Int
+                , body : Element msg
+                }
         , view : Int -> a -> Element msg
         , onScroll : ScrollOffset -> msg
         }

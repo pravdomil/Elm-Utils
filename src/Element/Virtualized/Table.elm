@@ -11,8 +11,15 @@ table :
         , toKey : a -> String
         , toSize : a -> Int
         , scrollOffset : Element.Virtualized.ScrollOffset
-        , header : { height : Int, attributes : List (Attribute msg) }
-        , footer : Maybe { height : Int, body : Element msg }
+        , header :
+            { height : Int
+            , attributes : List (Attribute msg)
+            }
+        , footer :
+            Maybe
+                { height : Int
+                , body : Element msg
+                }
         , columns : List (Column a msg)
         , rowAttributes : Int -> a -> List (Attribute msg)
         , onScroll : Element.Virtualized.ScrollOffset -> msg
@@ -40,7 +47,11 @@ table attrs a =
         , toKey = a.toKey
         , toSize = a.toSize
         , scrollOffset = a.scrollOffset
-        , header = Just { height = a.header.height, body = header }
+        , header =
+            Just
+                { height = a.header.height
+                , body = header
+                }
         , footer = a.footer
         , view = view
         , onScroll = a.onScroll
