@@ -2,6 +2,7 @@ module Element.Virtualized exposing (ScrollOffset(..), column)
 
 import Element exposing (..)
 import Element.Keyed
+import Html.Attributes
 import Html.Events
 import Json.Decode
 
@@ -12,9 +13,9 @@ column :
         { data : List a
         , toKey : a -> String
         , toSize : a -> Int
-        , paddingTop : Int
-        , paddingBottom : Int
         , scrollOffset : ScrollOffset
+        , header : Maybe ( Int, Element msg )
+        , footer : Maybe ( Int, Element msg )
         , view : a -> Element msg
         , onScroll : ScrollOffset -> msg
         }
@@ -23,19 +24,55 @@ column attrs a =
     let
         list : VirtualList a
         list =
-            compute a
+            compute
+                a.data
+                a.toSize
+                (a.header |> Maybe.map Tuple.first |> Maybe.withDefault 0)
+                a.scrollOffset
+
+        header : Element msg
+        header =
+            case a.header of
+                Just ( b, c ) ->
+                    el
+                        [ width fill
+                        , height (px b)
+                        , htmlAttribute (Html.Attributes.style "position" "sticky")
+                        , htmlAttribute (Html.Attributes.style "top" "0")
+                        ]
+                        c
+
+                Nothing ->
+                    none
+
+        footer : Element msg
+        footer =
+            case a.footer of
+                Just ( b, c ) ->
+                    el [ width fill, height (px b) ] c
+
+                Nothing ->
+                    none
     in
     el
         (width fill :: height fill :: scrollbars :: onScroll a.scrollOffset a.onScroll :: attrs)
         (Element.Keyed.column
-            (width fill :: paddingEach list.padding :: spacing 0 :: [])
-            (list.items
-                |> List.map
-                    (\v ->
-                        ( a.toKey v.value
-                        , el [ width fill, height (px v.size) ] (a.view v.value)
-                        )
-                    )
+            [ width fill ]
+            ([]
+                ++ [ ( "zps6-header", header )
+                   , ( "zps6-top", el [ height (px list.top) ] none )
+                   ]
+                ++ (list.items
+                        |> List.map
+                            (\x ->
+                                ( a.toKey x.value
+                                , el [ width fill, height (px x.size) ] (a.view x.value)
+                                )
+                            )
+                   )
+                ++ [ ( "zps6-bottom", el [ height (px list.bottom) ] none )
+                   , ( "zps6-footer", footer )
+                   ]
             )
         )
 
@@ -53,13 +90,9 @@ type ScrollOffset
 
 
 type alias VirtualList a =
-    { padding :
-        { left : Int
-        , right : Int
-        , top : Int
-        , bottom : Int
-        }
-    , items : List (Item a)
+    { items : List (Item a)
+    , top : Int
+    , bottom : Int
     }
 
 
@@ -74,13 +107,9 @@ viewportSize =
     1000
 
 
-compute : { b | data : List a, toSize : a -> Int, paddingTop : Int, paddingBottom : Int, scrollOffset : ScrollOffset } -> VirtualList a
-compute a =
+compute : List a -> (a -> Int) -> Int -> ScrollOffset -> VirtualList a
+compute data toSize startOffset (ScrollOffset scrollOffset) =
     let
-        scrollOffset : Int
-        scrollOffset =
-            a.scrollOffset |> (\(ScrollOffset v) -> v)
-
         offsetVisible : { min : Int, max : Int } -> Bool
         offsetVisible =
             intersects
@@ -88,51 +117,27 @@ compute a =
                 , max = scrollOffset + viewportSize + viewportSize
                 }
 
-        fold :
-            a
-            -> { offset : Int, paddingTop : Int, paddingBottom : Int, items : List (Item a) }
-            -> { offset : Int, paddingTop : Int, paddingBottom : Int, items : List (Item a) }
-        fold b acc =
+        fold : a -> ( VirtualList a, Int ) -> ( VirtualList a, Int )
+        fold b ( acc, offset ) =
             let
-                itemSize : Int
-                itemSize =
-                    max 0 (a.toSize b)
+                size : Int
+                size =
+                    max 0 (toSize b)
             in
-            if offsetVisible { min = acc.offset, max = acc.offset + itemSize } then
-                { acc
-                    | items = { size = itemSize, value = b } :: acc.items
-                    , offset = acc.offset + itemSize
-                }
+            ( if offsetVisible { min = offset, max = offset + size } then
+                { acc | items = { size = size, value = b } :: acc.items }
 
-            else if acc.items == [] then
-                { acc
-                    | paddingTop = acc.paddingTop + itemSize
-                    , offset = acc.offset + itemSize
-                }
+              else if acc.items == [] then
+                { acc | top = acc.top + size }
 
-            else
-                { acc
-                    | paddingBottom = acc.paddingBottom + itemSize
-                    , offset = acc.offset + itemSize
-                }
+              else
+                { acc | bottom = acc.bottom + size }
+            , offset + size
+            )
     in
-    a.data
-        |> List.foldl fold
-            { offset = a.paddingTop
-            , paddingTop = a.paddingTop
-            , paddingBottom = a.paddingBottom
-            , items = []
-            }
-        |> (\v ->
-                { padding =
-                    { left = 0
-                    , right = 0
-                    , top = v.paddingTop
-                    , bottom = v.paddingBottom
-                    }
-                , items = List.reverse v.items
-                }
-           )
+    data
+        |> List.foldl fold ( VirtualList [] 0 0, startOffset )
+        |> (\( x, _ ) -> { x | items = List.reverse x.items })
 
 
 intersects : { min : number, max : number } -> { min : number, max : number } -> Bool
