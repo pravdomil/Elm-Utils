@@ -21,7 +21,7 @@ table :
                 , body : Element msg
                 }
         , columns : List (Column a msg)
-        , noData : () -> Element msg
+        , emptyData : () -> Element msg
         , rowAttributes : Int -> a -> List (Attribute msg)
         , onScroll : Element.Virtualized.ScrollOffset -> msg
         }
@@ -55,7 +55,7 @@ table attrs a =
                 }
         , footer = a.footer
         , view = view
-        , noData = a.noData
+        , emptyData = a.emptyData
         , onScroll = a.onScroll
         }
 
