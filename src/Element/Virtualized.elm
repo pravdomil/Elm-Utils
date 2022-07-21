@@ -25,7 +25,7 @@ column :
                 , body : Element msg
                 }
         , view : Int -> a -> Element msg
-        , noData : () -> Element msg
+        , emptyData : () -> Element msg
         , onScroll : ScrollOffset -> msg
         }
     -> Element msg
@@ -73,7 +73,7 @@ column attrs a =
                    , ( "zps6-top", el [ height (px list.top) ] none )
                    ]
                 ++ (if list.items == [] then
-                        [ ( "zps6-data", a.noData () )
+                        [ ( "zps6-data", a.emptyData () )
                         ]
 
                     else
