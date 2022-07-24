@@ -3,9 +3,8 @@ module Dict.Any exposing
     , empty, singleton, insert, update, remove
     , isEmpty, member, get, size
     , keys, values, toList, fromList
-    , map, foldl, foldr, filter, partition
+    , map, foldl, foldlByOrder, foldr, foldrByOrder, filter, partition
     , union, intersect, diff, merge
-    , foldlByOrder, foldrByOrder
     )
 
 {-| A dictionary mapping unique keys to values.
@@ -35,7 +34,7 @@ Derived from elm/core@1.0.5 Dict module.
 
 # Transform
 
-@docs map, foldl, foldlWithOrder, foldr, foldrWithOrder, filter, partition
+@docs map, foldl, foldlByOrder, foldr, foldrByOrder, filter, partition
 
 
 # Combine
