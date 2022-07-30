@@ -22,7 +22,7 @@ table :
                 }
         , columns : List (Column a msg)
         , emptyData : () -> Element msg
-        , rowAttributes : Int -> a -> List (Attribute msg)
+        , viewRow : Int -> a -> List (Attribute msg) -> List (Element msg) -> Element msg
         , onScroll : Element.Virtualized.ScrollOffset -> msg
         }
     -> Element msg
@@ -39,7 +39,10 @@ table attrs a =
 
         view : Int -> a -> Element msg
         view i b =
-            row (width (fill |> minimum totalWidth) :: height fill :: a.rowAttributes i b)
+            a.viewRow
+                i
+                b
+                [ width (fill |> minimum totalWidth), height fill ]
                 (a.columns |> List.map (\x -> el [ width (px x.width), height fill ] (x.view i b)))
     in
     Element.Virtualized.column
