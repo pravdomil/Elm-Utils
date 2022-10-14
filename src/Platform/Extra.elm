@@ -10,3 +10,10 @@ andThen fn ( model, cmd ) =
     ( nextModel
     , Cmd.batch [ cmd2, cmd ]
     )
+
+
+noOperation : model -> ( model, Cmd msg )
+noOperation model =
+    ( model
+    , Cmd.none
+    )
