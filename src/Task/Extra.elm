@@ -13,10 +13,6 @@ fromMaybe x a =
             Task.fail x
 
 
-
---
-
-
 fromResult : Result x a -> Task.Task x a
 fromResult a =
     case a of
@@ -25,6 +21,10 @@ fromResult a =
 
         Err b ->
             Task.fail b
+
+
+
+--
 
 
 {-| <https://github.com/elm/core/issues/1111#issuecomment-892582007>
