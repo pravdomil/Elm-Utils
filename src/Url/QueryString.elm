@@ -31,6 +31,9 @@ fromString a =
         [] ->
             Dict.empty
 
+        "" :: [] ->
+            Dict.empty
+
         b ->
             b |> List.filterMap parseParam |> Dict.fromList
 
