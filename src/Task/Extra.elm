@@ -43,4 +43,4 @@ andAlwaysThen toTask a =
 
 apply : Task.Task x a -> Task.Task x (a -> b) -> Task.Task x b
 apply task a =
-    Task.map2 (\fn v -> fn v) a task
+    Task.map2 (\fn x -> fn x) a task

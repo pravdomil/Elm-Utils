@@ -12,8 +12,8 @@ string =
 json : Decode.Decoder a -> Http.Resolver Http.Error a
 json decoder =
     helper
-        (\v ->
-            v
+        (\x ->
+            x
                 |> Decode.decodeString decoder
                 |> Result.mapError (Decode.errorToString >> Http.BadBody)
         )
