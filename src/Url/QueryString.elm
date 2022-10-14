@@ -46,11 +46,11 @@ toString : QueryString -> String
 toString a =
     a
         |> Dict.toList
-        |> toStringFromList
+        |> entriesToString
 
 
-toStringFromList : List ( String, String ) -> String
-toStringFromList a =
+entriesToString : List ( String, String ) -> String
+entriesToString a =
     a
         |> List.map (\( k, v ) -> Url.percentEncode k ++ "=" ++ Url.percentEncode v)
         |> String.join "&"
