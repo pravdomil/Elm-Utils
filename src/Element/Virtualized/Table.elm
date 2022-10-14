@@ -63,6 +63,10 @@ table attrs a =
         }
 
 
+
+--
+
+
 type alias Column a msg =
     { header : Element msg
     , width : Int
