@@ -29,8 +29,8 @@ fromResult a =
 
 {-| <https://github.com/elm/core/issues/1111#issuecomment-892582007>
 -}
-taskAndThenWithResult : (Result x a -> Task.Task y b) -> Task.Task x a -> Task.Task y b
-taskAndThenWithResult toTask a =
+andAlwaysThen : (Result x a -> Task.Task y b) -> Task.Task x a -> Task.Task y b
+andAlwaysThen toTask a =
     a
         |> Task.map Ok
         |> Task.onError (Err >> Task.succeed)
