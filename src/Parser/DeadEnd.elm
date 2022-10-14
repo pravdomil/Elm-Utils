@@ -1,51 +1,51 @@
 module Parser.DeadEnd exposing (..)
 
-import Parser as P
+import Parser
 
 
-toString : P.DeadEnd -> String
+toString : Parser.DeadEnd -> String
 toString a =
     (case a.problem of
-        P.Expecting b ->
+        Parser.Expecting b ->
             "Expecting \"" ++ b ++ "\""
 
-        P.ExpectingInt ->
+        Parser.ExpectingInt ->
             "Expecting integer"
 
-        P.ExpectingHex ->
+        Parser.ExpectingHex ->
             "Expecting hex"
 
-        P.ExpectingOctal ->
+        Parser.ExpectingOctal ->
             "Expecting octal"
 
-        P.ExpectingBinary ->
+        Parser.ExpectingBinary ->
             "Expecting binary"
 
-        P.ExpectingFloat ->
+        Parser.ExpectingFloat ->
             "Expecting float"
 
-        P.ExpectingNumber ->
+        Parser.ExpectingNumber ->
             "Expecting number"
 
-        P.ExpectingVariable ->
+        Parser.ExpectingVariable ->
             "Expecting variable"
 
-        P.ExpectingSymbol b ->
+        Parser.ExpectingSymbol b ->
             "Expecting symbol \"" ++ b ++ "\""
 
-        P.ExpectingKeyword b ->
+        Parser.ExpectingKeyword b ->
             "Expecting keyword \"" ++ b ++ "\""
 
-        P.ExpectingEnd ->
+        Parser.ExpectingEnd ->
             "Expecting end"
 
-        P.UnexpectedChar ->
+        Parser.UnexpectedChar ->
             "Unexpected character"
 
-        P.Problem b ->
+        Parser.Problem b ->
             "Problem " ++ b
 
-        P.BadRepeat ->
+        Parser.BadRepeat ->
             "Bad repeat"
     )
         ++ " at "
@@ -57,6 +57,8 @@ toString a =
 
 {-| See <https://github.com/elm/parser/pull/16>.
 -}
-listToString : List P.DeadEnd -> String
+listToString : List Parser.DeadEnd -> String
 listToString a =
-    a |> List.map toString |> String.join "\n"
+    a
+        |> List.map toString
+        |> String.join "\n"
