@@ -1,11 +1,11 @@
-module Url.Codec exposing (..)
+module Url.Extra exposing (..)
 
 import Codec
 import Url
 
 
-url : Codec.Codec Url.Url
-url =
+codec : Codec.Codec Url.Url
+codec =
     Codec.string
         |> Codec.andThen
             Url.toString
