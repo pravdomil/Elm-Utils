@@ -12,8 +12,8 @@ type alias QueryRouter a =
     }
 
 
-init : (Url.Url -> a) -> Url.Url -> Browser.Navigation.Key -> (Url.Url -> msg) -> QueryRouter a
-init toState url key urlChanged_ =
+init : (Url.Url -> a) -> Url.Url -> Browser.Navigation.Key -> QueryRouter a
+init toState url key =
     { key = key
     , baseUrl = { url | query = Nothing, fragment = Nothing }
     , state = toState url
