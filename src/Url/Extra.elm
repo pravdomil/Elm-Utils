@@ -4,6 +4,18 @@ import Codec
 import Url
 
 
+{-| <https://developer.mozilla.org/en-US/docs/Glossary/Origin>
+-}
+toOrigin : Url.Url -> String
+toOrigin a =
+    { a
+        | path = ""
+        , query = Nothing
+        , fragment = Nothing
+    }
+        |> Url.toString
+
+
 codec : Codec.Codec Url.Url
 codec =
     Codec.string
