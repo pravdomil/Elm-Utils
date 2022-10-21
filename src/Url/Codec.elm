@@ -4,8 +4,8 @@ import Codec
 import Url
 
 
-codec : Codec.Codec Url.Url
-codec =
+url : Codec.Codec Url.Url
+url =
     Codec.string
         |> Codec.andThen
             Url.toString
