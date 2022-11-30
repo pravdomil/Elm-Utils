@@ -12,6 +12,13 @@ andThen fn ( model, cmd ) =
     )
 
 
+apply : ( a, Cmd msg ) -> ( a -> model, Cmd msg ) -> ( model, Cmd msg )
+apply ( a, nextCmd ) ( fn, cmd ) =
+    ( fn a
+    , Cmd.batch [ nextCmd, cmd ]
+    )
+
+
 noOperation : model -> ( model, Cmd msg )
 noOperation model =
     ( model
