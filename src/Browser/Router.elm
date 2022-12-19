@@ -1,4 +1,4 @@
-module Browser.Router exposing (Router, init, loadUrl, sameDirectory, samePath, updateUrl)
+module Browser.Router exposing (Router, init, loadUrl, sameDirectory, samePath, update)
 
 import Browser
 import Browser.Navigation
@@ -36,8 +36,8 @@ loadUrl isInternalUrl req model =
     )
 
 
-updateUrl : (Url.Url -> a) -> Url.Url -> { model | router : Router a } -> ( { model | router : Router a }, Cmd msg )
-updateUrl toState url model =
+update : (Url.Url -> a) -> Url.Url -> { model | router : Router a } -> ( { model | router : Router a }, Cmd msg )
+update toState url model =
     ( { model
         | router = (\x -> { x | state = toState url }) model.router
       }
