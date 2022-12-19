@@ -25,7 +25,7 @@ urlRequested req model =
     ( model
     , case req of
         Browser.Internal url ->
-            if compareUrl url model.router.baseUrl then
+            if sameUrlPath url model.router.baseUrl then
                 Browser.Navigation.pushUrl model.router.key (Url.toString url)
 
             else
@@ -49,8 +49,8 @@ urlChanged toState url model =
 --
 
 
-compareUrl : Url.Url -> Url.Url -> Bool
-compareUrl a b =
+sameUrlPath : Url.Url -> Url.Url -> Bool
+sameUrlPath a b =
     (a.protocol == b.protocol)
         && (a.host == b.host)
         && (a.port_ == b.port_)
