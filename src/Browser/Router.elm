@@ -1,18 +1,18 @@
-module Browser.QueryRouter exposing (..)
+module Browser.Router exposing (..)
 
 import Browser
 import Browser.Navigation
 import Url
 
 
-type alias QueryRouter a =
+type alias Router a =
     { key : Browser.Navigation.Key
     , baseUrl : Url.Url
     , state : a
     }
 
 
-init : (Url.Url -> a) -> Url.Url -> Browser.Navigation.Key -> QueryRouter a
+init : (Url.Url -> a) -> Url.Url -> Browser.Navigation.Key -> Router a
 init toState url key =
     { key = key
     , baseUrl = { url | query = Nothing, fragment = Nothing }
@@ -20,7 +20,7 @@ init toState url key =
     }
 
 
-urlRequested : Browser.UrlRequest -> { model | router : QueryRouter a } -> ( { model | router : QueryRouter a }, Cmd msg )
+urlRequested : Browser.UrlRequest -> { model | router : Router a } -> ( { model | router : Router a }, Cmd msg )
 urlRequested req model =
     ( model
     , case req of
@@ -36,7 +36,7 @@ urlRequested req model =
     )
 
 
-urlChanged : (Url.Url -> a) -> Url.Url -> { model | router : QueryRouter a } -> ( { model | router : QueryRouter a }, Cmd msg )
+urlChanged : (Url.Url -> a) -> Url.Url -> { model | router : Router a } -> ( { model | router : Router a }, Cmd msg )
 urlChanged toState url model =
     ( { model
         | router = (\x -> { x | state = toState url }) model.router
