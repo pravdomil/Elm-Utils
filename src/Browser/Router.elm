@@ -15,7 +15,7 @@ type alias Router a =
 init : (Url.Url -> a) -> Url.Url -> Browser.Navigation.Key -> Router a
 init toState url key =
     { key = key
-    , baseUrl = { url | query = Nothing, fragment = Nothing }
+    , baseUrl = url
     , state = toState url
     }
 
@@ -25,7 +25,7 @@ urlRequested req model =
     ( model
     , case req of
         Browser.Internal url ->
-            if { url | query = Nothing, fragment = Nothing } == model.router.baseUrl then
+            if compareUrl url model.router.baseUrl then
                 Browser.Navigation.pushUrl model.router.key (Url.toString url)
 
             else
@@ -43,3 +43,13 @@ urlChanged toState url model =
       }
     , Cmd.none
     )
+
+
+
+--
+
+
+compareUrl : Url.Url -> Url.Url -> Bool
+compareUrl a b =
+    { a | query = Nothing, fragment = Nothing }
+        == { b | query = Nothing, fragment = Nothing }
