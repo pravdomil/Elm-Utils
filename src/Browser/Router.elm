@@ -20,12 +20,12 @@ init toState url key =
         (toState url)
 
 
-urlRequested : Browser.UrlRequest -> { model | router : Router a } -> ( { model | router : Router a }, Cmd msg )
-urlRequested req model =
+urlRequested : (Url.Url -> Url.Url -> Bool) -> Browser.UrlRequest -> { model | router : Router a } -> ( { model | router : Router a }, Cmd msg )
+urlRequested isInternalUrl req model =
     ( model
     , case req of
         Browser.Internal url ->
-            if samePath url model.router.baseUrl then
+            if isInternalUrl model.router.baseUrl url then
                 Browser.Navigation.pushUrl model.router.key (Url.toString url)
 
             else
