@@ -14,10 +14,10 @@ type alias Router a =
 
 init : (Url.Url -> a) -> Url.Url -> Browser.Navigation.Key -> Router a
 init toState url key =
-    { key = key
-    , baseUrl = url
-    , state = toState url
-    }
+    Router
+        key
+        url
+        (toState url)
 
 
 urlRequested : Browser.UrlRequest -> { model | router : Router a } -> ( { model | router : Router a }, Cmd msg )
