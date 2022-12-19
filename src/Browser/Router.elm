@@ -1,4 +1,4 @@
-module Browser.Router exposing (..)
+module Browser.Router exposing (Router, init, sameDirectory, samePath, urlChanged, urlRequested)
 
 import Browser
 import Browser.Navigation
