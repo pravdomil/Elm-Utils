@@ -55,3 +55,24 @@ samePath a b =
         && (a.host == b.host)
         && (a.port_ == b.port_)
         && (a.path == b.path)
+
+
+sameDirectory : Url.Url -> Url.Url -> Bool
+sameDirectory a b =
+    (a.protocol == b.protocol)
+        && (a.host == b.host)
+        && (a.port_ == b.port_)
+        && (dropAfter "/" a.path == dropAfter "/" b.path)
+
+
+
+--
+
+
+dropAfter : String -> String -> String
+dropAfter pattern a =
+    String.indexes pattern a
+        |> List.reverse
+        |> List.head
+        |> Maybe.map (\x -> String.left (x + 1) a)
+        |> Maybe.withDefault ""
