@@ -51,5 +51,7 @@ urlChanged toState url model =
 
 compareUrl : Url.Url -> Url.Url -> Bool
 compareUrl a b =
-    { a | query = Nothing, fragment = Nothing }
-        == { b | query = Nothing, fragment = Nothing }
+    (a.protocol == b.protocol)
+        && (a.host == b.host)
+        && (a.port_ == b.port_)
+        && (a.path == b.path)
