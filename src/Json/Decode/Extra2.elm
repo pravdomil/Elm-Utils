@@ -1,4 +1,4 @@
-module Json.Decode.Extra exposing (..)
+module Json.Decode.Extra2 exposing (..)
 
 import Json.Decode
 
