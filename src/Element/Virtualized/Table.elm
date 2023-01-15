@@ -10,7 +10,13 @@ table :
         { data : List a
         , toKey : a -> String
         , toSize : a -> Int
-        , scrollOffset : Element.Virtualized.ScrollOffset
+
+        --
+        , columns : List (Column a msg)
+        , emptyData : () -> Element msg
+        , viewRow : Int -> a -> List (Attribute msg) -> List (Element msg) -> Element msg
+
+        --
         , header :
             { height : Int
             , attributes : List (Attribute msg)
@@ -20,9 +26,9 @@ table :
                 { height : Int
                 , body : Element msg
                 }
-        , columns : List (Column a msg)
-        , emptyData : () -> Element msg
-        , viewRow : Int -> a -> List (Attribute msg) -> List (Element msg) -> Element msg
+
+        --
+        , scrollOffset : Element.Virtualized.ScrollOffset
         , onScroll : Element.Virtualized.ScrollOffset -> msg
         }
     -> Element msg
