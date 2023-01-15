@@ -10,11 +10,12 @@ table :
         { data : List a
         , toKey : a -> String
         , toSize : a -> Int
+        , toContext : Int -> a -> context
 
         --
-        , columns : List (Column a msg)
+        , columns : List (Column context a msg)
         , emptyData : () -> Element msg
-        , viewRow : Int -> a -> List (Attribute msg) -> List (Element msg) -> Element msg
+        , viewRow : context -> a -> List (Attribute msg) -> List (Element msg) -> Element msg
 
         --
         , header :
@@ -45,11 +46,16 @@ table attrs a =
 
         view : Int -> a -> Element msg
         view i b =
+            let
+                context : context
+                context =
+                    a.toContext i b
+            in
             a.viewRow
-                i
+                context
                 b
                 [ width (fill |> minimum totalWidth), height fill ]
-                (a.columns |> List.map (\x -> el [ width (px x.width), height fill ] (x.view i b)))
+                (a.columns |> List.map (\x -> el [ width (px x.width), height fill ] (x.view context b)))
     in
     Element.Virtualized.column
         attrs
@@ -73,8 +79,8 @@ table attrs a =
 --
 
 
-type alias Column a msg =
+type alias Column context a msg =
     { header : Element msg
     , width : Int
-    , view : Int -> a -> Element msg
+    , view : context -> a -> Element msg
     }
