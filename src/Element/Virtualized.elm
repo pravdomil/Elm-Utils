@@ -129,8 +129,8 @@ compute data toSize startOffset (ScrollOffset scrollOffset) =
         offsetVisible : { min : Int, max : Int } -> Bool
         offsetVisible =
             intersects
-                { min = scrollOffset - viewportSize
-                , max = scrollOffset + viewportSize + viewportSize
+                { min = scrollOffset - viewportSize // 2
+                , max = scrollOffset + viewportSize + viewportSize // 2
                 }
 
         fold : a -> ( VirtualList a, Int, Int ) -> ( VirtualList a, Int, Int )
