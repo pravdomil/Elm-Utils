@@ -57,7 +57,7 @@ entriesToString a =
 
 maybeEntriesToString : List ( String, Maybe String ) -> String
 maybeEntriesToString a =
-    List.filterMap (\( k, v ) -> v |> Maybe.map (\x -> Url.percentEncode k ++ "=" ++ Url.percentEncode x)) a
+    List.filterMap (\( k, v ) -> v |> Maybe.map (\x -> entryToString ( k, x ))) a
         |> String.join "&"
 
 
