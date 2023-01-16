@@ -1,4 +1,4 @@
-module Browser.Router exposing (Router, init, requestUrl, update, urlToDirectoryBaseUrl, urlToFileBaseUrl)
+module Browser.Router exposing (Router, init, requestUrl, updateState, urlToDirectoryBaseUrl, urlToFileBaseUrl)
 
 import Browser
 import Browser.Navigation
@@ -36,8 +36,8 @@ requestUrl toBaseUrl req model =
     )
 
 
-update : (Url.Url -> a) -> Url.Url -> { model | router : Router a } -> ( { model | router : Router a }, Cmd msg )
-update toState url model =
+updateState : (Url.Url -> a) -> Url.Url -> { model | router : Router a } -> ( { model | router : Router a }, Cmd msg )
+updateState toState url model =
     ( { model
         | router = (\x -> { x | state = toState url }) model.router
       }
