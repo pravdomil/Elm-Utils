@@ -40,20 +40,17 @@ fromString a =
 
 fromUrl : Url.Url -> QueryString
 fromUrl a =
-    a.query
-        |> Maybe.map fromString
+    Maybe.map fromString a.query
         |> Maybe.withDefault Dict.empty
 
 
 toString : QueryString -> String
 toString a =
-    a
-        |> Dict.toList
+    Dict.toList a
         |> entriesToString
 
 
 entriesToString : List ( String, String ) -> String
 entriesToString a =
-    a
-        |> List.map (\( k, v ) -> Url.percentEncode k ++ "=" ++ Url.percentEncode v)
+    List.map (\( k, v ) -> Url.percentEncode k ++ "=" ++ Url.percentEncode v) a
         |> String.join "&"
