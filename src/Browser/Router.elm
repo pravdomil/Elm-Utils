@@ -1,6 +1,7 @@
-module Browser.Router exposing (Router, baseUrl, init, key, requestUrl, state, urlChanged, urlToDirectoryBaseUrl, urlToFileBaseUrl)
+module Browser.Router exposing (Router, baseUrl, init, key, pushState, replaceState, requestUrl, state, urlChanged, urlToDirectoryBaseUrl, urlToFileBaseUrl)
 
 import Browser
+import Browser.Extra
 import Browser.Navigation
 import Url
 
@@ -54,10 +55,26 @@ requestUrl toBaseUrl req model =
 
 urlChanged : (Url.Url -> a) -> Url.Url -> { model | router : Router a } -> ( { model | router : Router a }, Cmd msg )
 urlChanged toState url model =
-    ( { model
-        | router = (\(Router x x2 _) -> Router x x2 (toState url)) model.router
-      }
+    ( updateState (toState url) model
     , Cmd.none
+    )
+
+
+
+--
+
+
+pushState : (a -> String) -> a -> { model | router : Router a } -> ( { model | router : Router a }, Cmd msg )
+pushState toUrl a model =
+    ( updateState a model
+    , Browser.Extra.safePushUrl (key model.router) (toUrl a)
+    )
+
+
+replaceState : (a -> String) -> a -> { model | router : Router a } -> ( { model | router : Router a }, Cmd msg )
+replaceState toUrl a model =
+    ( updateState a model
+    , Browser.Extra.safeReplaceUrl (key model.router) (toUrl a)
     )
 
 
@@ -79,6 +96,17 @@ urlToDirectoryBaseUrl a =
         | path = dropAfter "/" a.path
         , query = Nothing
         , fragment = Nothing
+    }
+
+
+
+--
+
+
+updateState : a -> { model | router : Router a } -> { model | router : Router a }
+updateState a model =
+    { model
+        | router = (\(Router x x2 _) -> Router x x2 a) model.router
     }
 
 
