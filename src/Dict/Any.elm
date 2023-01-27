@@ -5,6 +5,7 @@ module Dict.Any exposing
     , keys, values, toList, fromList
     , map, foldl, foldlByOrder, foldr, foldrByOrder, filter, partition
     , union, intersect, diff, merge
+    , anyEquals, find
     )
 
 {-| A dictionary mapping unique keys to values.
@@ -688,3 +689,47 @@ toList dict =
 fromList : (k -> comparable) -> List ( k, v ) -> Dict k v
 fromList toComparable assocs =
     List.foldl (\( key, value ) dict -> insert toComparable key value dict) empty assocs
+
+
+
+--
+
+
+{-| -}
+find : (k -> v -> Bool) -> Dict k v -> Maybe ( k, v )
+find fn a =
+    case a of
+        RBNode_elm_builtin _ k v left right ->
+            case fn k v of
+                True ->
+                    Just ( k, v )
+
+                False ->
+                    case find fn left of
+                        Just b ->
+                            Just b
+
+                        Nothing ->
+                            find fn right
+
+        RBEmpty_elm_builtin ->
+            Nothing
+
+
+{-| -}
+anyEquals : (k -> Order) -> Dict k v -> Bool
+anyEquals toOrder a =
+    case a of
+        RBEmpty_elm_builtin ->
+            False
+
+        RBNode_elm_builtin _ k _ left right ->
+            case toOrder k of
+                LT ->
+                    anyEquals toOrder left
+
+                EQ ->
+                    True
+
+                GT ->
+                    anyEquals toOrder right
