@@ -5,7 +5,7 @@ module Dict.Any exposing
     , keys, values, toList, fromList
     , map, foldl, foldlByOrder, foldr, foldrByOrder, filter, partition
     , union, intersect, diff, merge
-    , anyEquals, find, first, isSingleton, last
+    , anyEquals, find, findMap, first, isSingleton, last
     )
 
 {-| A dictionary mapping unique keys to values.
@@ -711,6 +711,27 @@ find fn a =
 
                         Nothing ->
                             find fn right
+
+        RBEmpty_elm_builtin ->
+            Nothing
+
+
+{-| -}
+findMap : (k -> v -> Maybe a) -> Dict k v -> Maybe a
+findMap fn a =
+    case a of
+        RBNode_elm_builtin _ k v left right ->
+            case fn k v of
+                Just b ->
+                    Just b
+
+                Nothing ->
+                    case findMap fn left of
+                        Just b ->
+                            Just b
+
+                        Nothing ->
+                            findMap fn right
 
         RBEmpty_elm_builtin ->
             Nothing
