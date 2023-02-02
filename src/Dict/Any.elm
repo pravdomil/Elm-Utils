@@ -795,7 +795,7 @@ all fn a =
                     False
 
         RBEmpty_elm_builtin ->
-            False
+            True
 
 
 {-| -}
