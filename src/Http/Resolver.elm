@@ -6,16 +6,17 @@ import Json.Decode as Decode
 
 string : Http.Resolver Http.Error String
 string =
-    helper Ok
+    Http.stringResolver (helper Ok)
 
 
 json : Decode.Decoder a -> Http.Resolver Http.Error a
 json decoder =
-    helper
-        (\x ->
-            x
-                |> Decode.decodeString decoder
-                |> Result.mapError (Decode.errorToString >> Http.BadBody)
+    Http.stringResolver
+        (helper
+            (\x ->
+                Decode.decodeString decoder x
+                    |> Result.mapError Decode.errorToString
+            )
         )
 
 
@@ -23,25 +24,20 @@ json decoder =
 --
 
 
-helper : (String -> Result Http.Error a) -> Http.Resolver Http.Error a
-helper fn =
-    let
-        toResult : Http.Response String -> Result Http.Error a
-        toResult a =
-            case a of
-                Http.BadUrl_ b ->
-                    Err (Http.BadUrl b)
+helper : (body -> Result String a) -> Http.Response body -> Result Http.Error a
+helper fn a =
+    case a of
+        Http.BadUrl_ b ->
+            Err (Http.BadUrl b)
 
-                Http.Timeout_ ->
-                    Err Http.Timeout
+        Http.Timeout_ ->
+            Err Http.Timeout
 
-                Http.NetworkError_ ->
-                    Err Http.NetworkError
+        Http.NetworkError_ ->
+            Err Http.NetworkError
 
-                Http.BadStatus_ b _ ->
-                    Err (Http.BadStatus b.statusCode)
+        Http.BadStatus_ b _ ->
+            Err (Http.BadStatus b.statusCode)
 
-                Http.GoodStatus_ _ b ->
-                    fn b
-    in
-    Http.stringResolver toResult
+        Http.GoodStatus_ _ b ->
+            Result.mapError Http.BadBody (fn b)
