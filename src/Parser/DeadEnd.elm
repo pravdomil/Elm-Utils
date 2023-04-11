@@ -7,58 +7,53 @@ toString : Parser.DeadEnd -> String
 toString a =
     (case a.problem of
         Parser.Expecting b ->
-            "Expecting \"" ++ b ++ "\""
+            "Expecting " ++ b ++ "."
 
         Parser.ExpectingInt ->
-            "Expecting integer"
+            "Expecting integer."
 
         Parser.ExpectingHex ->
-            "Expecting hex"
+            "Expecting hex."
 
         Parser.ExpectingOctal ->
-            "Expecting octal"
+            "Expecting octal."
 
         Parser.ExpectingBinary ->
-            "Expecting binary"
+            "Expecting binary."
 
         Parser.ExpectingFloat ->
-            "Expecting float"
+            "Expecting float."
 
         Parser.ExpectingNumber ->
-            "Expecting number"
+            "Expecting number."
 
         Parser.ExpectingVariable ->
-            "Expecting variable"
+            "Expecting variable."
 
         Parser.ExpectingSymbol b ->
-            "Expecting symbol \"" ++ b ++ "\""
+            "Expecting symbol " ++ b ++ "."
 
         Parser.ExpectingKeyword b ->
-            "Expecting keyword \"" ++ b ++ "\""
+            "Expecting keyword " ++ b ++ "."
 
         Parser.ExpectingEnd ->
-            "Expecting end"
+            "Expecting end."
 
         Parser.UnexpectedChar ->
-            "Unexpected character"
+            "Unexpected character."
 
         Parser.Problem b ->
-            "Problem " ++ b
+            b
 
         Parser.BadRepeat ->
-            "Bad repeat"
+            "Bad repeat."
     )
-        ++ " at "
-        ++ String.fromInt a.row
-        ++ ":"
-        ++ String.fromInt a.col
-        ++ "."
+        ++ "\n"
+        ++ ("Check row " ++ String.fromInt a.row ++ " column " ++ String.fromInt a.col ++ ".")
 
 
 {-| See <https://github.com/elm/parser/pull/16>.
 -}
 listToString : List Parser.DeadEnd -> String
 listToString a =
-    a
-        |> List.map toString
-        |> String.join "\n"
+    String.join "\n" (List.map toString a)
