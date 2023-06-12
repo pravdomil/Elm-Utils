@@ -1,7 +1,6 @@
 module Json.Decode.Extra2 exposing (..)
 
 import Json.Decode
-import Json.Decode.Extra2
 
 
 apply : Json.Decode.Decoder a -> Json.Decode.Decoder (a -> b) -> Json.Decode.Decoder b
