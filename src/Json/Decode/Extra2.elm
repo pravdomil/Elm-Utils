@@ -10,16 +10,16 @@ apply decoder a =
 
 
 maybeField : String -> Json.Decode.Decoder a -> Json.Decode.Decoder (Maybe a)
-maybeField a decoder =
+maybeField name a =
     Json.Decode.oneOf
-        [ Json.Decode.field a (Json.Decode.map Just Json.Decode.value)
+        [ Json.Decode.field name (Json.Decode.map Just Json.Decode.value)
         , Json.Decode.succeed Nothing
         ]
         |> Json.Decode.andThen
             (\x ->
                 case x of
                     Just _ ->
-                        Json.Decode.field a (Json.Decode.map Just decoder)
+                        Json.Decode.field name (Json.Decode.map Just a)
 
                     Nothing ->
                         Json.Decode.succeed Nothing
