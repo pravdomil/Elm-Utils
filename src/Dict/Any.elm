@@ -5,7 +5,7 @@ module Dict.Any exposing
     , keys, values, toList, fromList
     , map, foldl, foldlByOrder, foldr, foldrByOrder, filter, partition
     , union, intersect, diff, merge
-    , all, any, anyEquals, find, findMap, first, isSingleton, last
+    , all, any, anyEquals, codec, find, findMap, first, isSingleton, last
     )
 
 {-| A dictionary mapping unique keys to values.
@@ -45,6 +45,7 @@ Derived from elm/core@1.0.5 Dict module.
 -}
 
 import Basics exposing (..)
+import Codec
 import List exposing (..)
 import Maybe exposing (..)
 
@@ -839,3 +840,42 @@ last a =
 
         RBEmpty_elm_builtin ->
             Nothing
+
+
+
+--
+
+
+codec : Codec.Codec k -> Codec.Codec v -> Codec.Codec (Dict k v)
+codec k v =
+    Codec.lazy
+        (\() ->
+            Codec.custom
+                (\fn1 fn2 x ->
+                    case x of
+                        RBNode_elm_builtin x1 x2 x3 x4 x5 ->
+                            fn1 x1 x2 x3 x4 x5
+
+                        RBEmpty_elm_builtin ->
+                            fn2
+                )
+                |> Codec.variant5 RBNode_elm_builtin nColorCodec k v (codec k v) (codec k v)
+                |> Codec.variant0 RBEmpty_elm_builtin
+                |> Codec.buildCustom
+        )
+
+
+nColorCodec : Codec.Codec NColor
+nColorCodec =
+    Codec.custom
+        (\fn1 fn2 x ->
+            case x of
+                Red ->
+                    fn1
+
+                Black ->
+                    fn2
+        )
+        |> Codec.variant0 Red
+        |> Codec.variant0 Black
+        |> Codec.buildCustom
