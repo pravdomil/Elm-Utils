@@ -867,15 +867,21 @@ codec k v =
 
 nColorCodec : Codec.Codec NColor
 nColorCodec =
-    Codec.custom
-        (\fn1 fn2 x ->
-            case x of
-                Red ->
-                    fn1
+    Codec.int
+        |> Codec.andThen
+            (\x ->
+                case x of
+                    Red ->
+                        0
 
-                Black ->
-                    fn2
-        )
-        |> Codec.variant0 Red
-        |> Codec.variant0 Black
-        |> Codec.buildCustom
+                    Black ->
+                        1
+            )
+            (\x ->
+                case x of
+                    0 ->
+                        Codec.succeed Red
+
+                    1 ->
+                        Codec.succeed Black
+            )
