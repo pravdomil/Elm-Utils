@@ -46,6 +46,8 @@ Derived from elm/core@1.0.5 Dict module.
 
 import Basics exposing (..)
 import Codec
+import Json.Decode
+import Json.Encode
 import List exposing (..)
 import Maybe exposing (..)
 
@@ -850,38 +852,64 @@ codec : Codec.Codec k -> Codec.Codec v -> Codec.Codec (Dict k v)
 codec k v =
     Codec.lazy
         (\() ->
-            Codec.custom
-                (\fn1 fn2 x ->
+            let
+                encoder : Dict k v -> Json.Encode.Value
+                encoder x =
                     case x of
-                        RBNode_elm_builtin x1 x2 x3 x4 x5 ->
-                            fn1 x1 x2 x3 x4 x5
+                        RBNode_elm_builtin Red k_ v_ a b ->
+                            Json.Encode.list
+                                identity
+                                [ Json.Encode.int 0
+                                , Codec.encoder k k_
+                                , Codec.encoder v v_
+                                , Codec.encoder (codec k v) a
+                                , Codec.encoder (codec k v) b
+                                ]
+
+                        RBNode_elm_builtin Black k_ v_ a b ->
+                            Json.Encode.list
+                                identity
+                                [ Json.Encode.int 1
+                                , Codec.encoder k k_
+                                , Codec.encoder v v_
+                                , Codec.encoder (codec k v) a
+                                , Codec.encoder (codec k v) b
+                                ]
 
                         RBEmpty_elm_builtin ->
-                            fn2
-                )
-                |> Codec.variant5 RBNode_elm_builtin nColorCodec k v (codec k v) (codec k v)
-                |> Codec.variant0 RBEmpty_elm_builtin
-                |> Codec.buildCustom
+                            Json.Encode.list
+                                identity
+                                [ Json.Encode.int 2
+                                ]
+
+                decoder : Json.Decode.Decoder (Dict k v)
+                decoder =
+                    Json.Decode.index 0 Json.Decode.int
+                        |> Json.Decode.andThen
+                            (\x ->
+                                case x of
+                                    0 ->
+                                        Json.Decode.map4
+                                            (RBNode_elm_builtin Red)
+                                            (Codec.decoder k)
+                                            (Codec.decoder v)
+                                            (Codec.decoder (codec k v))
+                                            (Codec.decoder (codec k v))
+
+                                    1 ->
+                                        Json.Decode.map4
+                                            (RBNode_elm_builtin Black)
+                                            (Codec.decoder k)
+                                            (Codec.decoder v)
+                                            (Codec.decoder (codec k v))
+                                            (Codec.decoder (codec k v))
+
+                                    2 ->
+                                        Json.Decode.succeed RBEmpty_elm_builtin
+
+                                    _ ->
+                                        Json.Decode.fail "Cannot decode dictionary."
+                            )
+            in
+            Codec.build encoder decoder
         )
-
-
-nColorCodec : Codec.Codec NColor
-nColorCodec =
-    Codec.int
-        |> Codec.andThen
-            (\x ->
-                case x of
-                    Red ->
-                        0
-
-                    Black ->
-                        1
-            )
-            (\x ->
-                case x of
-                    0 ->
-                        Codec.succeed Red
-
-                    _ ->
-                        Codec.succeed Black
-            )
