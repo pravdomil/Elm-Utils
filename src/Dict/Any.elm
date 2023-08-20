@@ -882,6 +882,6 @@ nColorCodec =
                     0 ->
                         Codec.succeed Red
 
-                    1 ->
+                    _ ->
                         Codec.succeed Black
             )
