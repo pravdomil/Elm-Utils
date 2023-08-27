@@ -13,7 +13,7 @@ fromString a =
     let
         parseParam : String -> Maybe ( String, String )
         parseParam b =
-            case b |> String.split "=" of
+            case String.split "=" b of
                 c :: [] ->
                     Maybe.map2 Tuple.pair
                         (Url.percentDecode c)
@@ -27,7 +27,7 @@ fromString a =
                 _ ->
                     Nothing
     in
-    case a |> String.split "&" of
+    case String.split "&" a of
         [] ->
             Dict.empty
 
@@ -35,30 +35,27 @@ fromString a =
             Dict.empty
 
         b ->
-            b |> List.filterMap parseParam |> Dict.fromList
+            Dict.fromList (List.filterMap parseParam b)
 
 
 fromUrl : Url.Url -> QueryString
 fromUrl a =
-    Maybe.map fromString a.query
-        |> Maybe.withDefault Dict.empty
+    Maybe.withDefault Dict.empty (Maybe.map fromString a.query)
 
 
 toString : QueryString -> String
 toString a =
-    Dict.toList a
-        |> entriesToString
+    entriesToString (Dict.toList a)
 
 
 entriesToString : List ( String, String ) -> String
 entriesToString a =
-    List.map entryToString a |> String.join "&"
+    String.join "&" (List.map entryToString a)
 
 
 maybeEntriesToString : List ( String, Maybe String ) -> String
 maybeEntriesToString a =
-    List.filterMap (\( k, v ) -> v |> Maybe.map (\x -> entryToString ( k, x ))) a
-        |> String.join "&"
+    String.join "&" (List.filterMap (\( k, v ) -> Maybe.map (\x -> entryToString ( k, x )) v) a)
 
 
 entryToString : ( String, String ) -> String
