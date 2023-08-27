@@ -1,7 +1,6 @@
 module Browser.Router exposing (Router, baseUrl, init, key, state, urlChanged, urlRequested, urlToDirectoryBaseUrl, urlToFileBaseUrl)
 
 import Browser
-import Browser.Extra
 import Browser.Navigation
 import Url
 
