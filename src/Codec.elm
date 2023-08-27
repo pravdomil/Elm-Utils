@@ -41,12 +41,12 @@ Fork of [elm-codec](https://github.com/miniBill/elm-codec).
 @docs Custom, custom, variant0, variant1, variant2, variant3, variant4, variant5, variant6, variant7, variant8, buildCustom
 
 
-# Opaque Custom Types
+# Common Coders
 
 @docs int, float, char, string, list, array, dict, set
 
 
-# Common Custom Types
+# More Common Coders
 
 @docs bool, maybe, result
 
