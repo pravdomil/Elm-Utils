@@ -1,4 +1,4 @@
-module Browser.Router exposing (Router, baseUrl, init, key, requestUrl, state, urlChanged, urlToDirectoryBaseUrl, urlToFileBaseUrl)
+module Browser.Router exposing (Router, baseUrl, init, key, state, urlChanged, urlRequested, urlToDirectoryBaseUrl, urlToFileBaseUrl)
 
 import Browser
 import Browser.Extra
@@ -37,8 +37,8 @@ init toBaseUrl toState url key_ =
         (toState url)
 
 
-requestUrl : (Url.Url -> Url.Url) -> Browser.UrlRequest -> { model | router : Router a } -> ( { model | router : Router a }, Cmd msg )
-requestUrl toBaseUrl req model =
+urlRequested : (Url.Url -> Url.Url) -> Browser.UrlRequest -> { model | router : Router a } -> ( { model | router : Router a }, Cmd msg )
+urlRequested toBaseUrl req model =
     ( model
     , case req of
         Browser.Internal url ->
