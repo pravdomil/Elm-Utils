@@ -1,4 +1,4 @@
-module Browser.Router exposing (Router, baseUrl, init, key, state, urlChanged, urlRequested, urlToDirectoryBaseUrl, urlToFileBaseUrl)
+module Browser.Router exposing (Router, baseUrl, directoryBaseUrl, fileBaseUrl, init, key, state, urlChanged, urlRequested)
 
 import Browser
 import Browser.Navigation
@@ -63,16 +63,16 @@ urlChanged toState url model =
 --
 
 
-urlToFileBaseUrl : Url.Url -> Url.Url
-urlToFileBaseUrl a =
+fileBaseUrl : Url.Url -> Url.Url
+fileBaseUrl a =
     { a
         | query = Nothing
         , fragment = Nothing
     }
 
 
-urlToDirectoryBaseUrl : Url.Url -> Url.Url
-urlToDirectoryBaseUrl a =
+directoryBaseUrl : Url.Url -> Url.Url
+directoryBaseUrl a =
     { a
         | path = dropAfter "/" a.path
         , query = Nothing
