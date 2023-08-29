@@ -8,12 +8,12 @@ import Url
 -}
 toOrigin : Url.Url -> String
 toOrigin a =
-    { a
-        | path = ""
-        , query = Nothing
-        , fragment = Nothing
-    }
-        |> Url.toString
+    Url.toString
+        { a
+            | path = ""
+            , query = Nothing
+            , fragment = Nothing
+        }
 
 
 codec : Codec.Codec Url.Url
