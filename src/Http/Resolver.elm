@@ -6,13 +6,13 @@ import Json.Decode as Decode
 
 string : Http.Resolver Http.Error String
 string =
-    Http.stringResolver (helper Ok)
+    Http.stringResolver (custom Ok)
 
 
 json : Decode.Decoder a -> Http.Resolver Http.Error a
 json decoder =
     Http.stringResolver
-        (helper
+        (custom
             (\x ->
                 Decode.decodeString decoder x
                     |> Result.mapError Decode.errorToString
@@ -24,8 +24,8 @@ json decoder =
 --
 
 
-helper : (body -> Result String a) -> Http.Response body -> Result Http.Error a
-helper fn a =
+custom : (body -> Result String a) -> Http.Response body -> Result Http.Error a
+custom fn a =
     case a of
         Http.BadUrl_ b ->
             Err (Http.BadUrl b)
