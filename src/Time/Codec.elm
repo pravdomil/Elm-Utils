@@ -6,4 +6,4 @@ import Time
 
 posix : Codec.Codec Time.Posix
 posix =
-    Codec.int |> Codec.map Time.posixToMillis Time.millisToPosix
+    Codec.map Time.posixToMillis Time.millisToPosix Codec.int
