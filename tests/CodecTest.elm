@@ -99,7 +99,7 @@ customTypesTest =
             (\_ ->
                 Expect.equal
                     "[0,1]"
-                    (SomeVariant 1 |> Codec.encodeToString 0 (someTypeCodec Codec.int))
+                    (SomeVariant 1 |> Codec.encodeToString (someTypeCodec Codec.int))
             )
         , Test.describe "with 1 variant, 0 args"
             [ roundTripTest

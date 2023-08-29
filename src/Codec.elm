@@ -92,9 +92,9 @@ encoder (Codec a _) =
 {-| Convert a value into a prettified JSON string. The first argument specifies
 the amount of indentation in the result string.
 -}
-encodeToString : Int -> Codec a -> a -> String
-encodeToString indentation a =
-    encoder a >> Json.Encode.encode indentation
+encodeToString : Codec a -> a -> String
+encodeToString a =
+    encoder a >> Json.Encode.encode 0
 
 
 {-| Convert a value into a Javascript `Value`.
