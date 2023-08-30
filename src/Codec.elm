@@ -140,9 +140,7 @@ decodeValue a =
 -}
 unit : Codec ()
 unit =
-    Codec
-        (\() -> Json.Encode.list identity [])
-        (Json.Decode.succeed ())
+    succeed ()
 
 
 {-| `Codec` between a JSON array of length 2 and an Elm `Tuple`.
@@ -874,7 +872,7 @@ lazy fn =
 succeed : a -> Codec a
 succeed a =
     Codec
-        (\_ -> encodeToValue unit ())
+        (\_ -> Json.Encode.list identity [])
         (Json.Decode.succeed a)
 
 
