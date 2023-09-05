@@ -3,7 +3,7 @@ module Dict.Any exposing
     , empty, singleton, insert, update, remove
     , isEmpty, member, get, size
     , keys, values, toList, fromList
-    , map, foldl, foldlByOrder, foldr, foldrByOrder, filter, partition
+    , map, filteredMap, foldl, foldlByOrder, foldr, foldrByOrder, filter, partition
     , union, intersect, diff, merge
     , all, any, anyEquals, codec, find, findMap, first, isSingleton, last
     )
@@ -35,7 +35,7 @@ Derived from elm/core@1.0.5 Dict module.
 
 # Transform
 
-@docs map, foldl, foldlByOrder, foldr, foldrByOrder, filter, partition
+@docs map, filteredMap, foldl, foldlByOrder, foldr, foldrByOrder, filter, partition
 
 
 # Combine
@@ -531,6 +531,22 @@ map func dict =
 
         RBNode_elm_builtin color key value left right ->
             RBNode_elm_builtin color key (func key value) (map func left) (map func right)
+
+
+{-| -}
+filteredMap : (k -> comparable) -> (k -> a -> Maybe b) -> Dict k a -> Dict k b
+filteredMap toComparable func dict =
+    foldl
+        (\x x2 acc ->
+            case func x x2 of
+                Just x3 ->
+                    insert toComparable x x3 acc
+
+                Nothing ->
+                    acc
+        )
+        empty
+        dict
 
 
 {-| Fold over the key-value pairs in a dictionary from lowest key to highest key.
