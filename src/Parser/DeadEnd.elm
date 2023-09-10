@@ -1,6 +1,7 @@
 module Parser.DeadEnd exposing (..)
 
 import Parser
+import Parser.Advanced
 
 
 toString : Parser.DeadEnd -> String
@@ -57,3 +58,17 @@ toString a =
 listToString : List Parser.DeadEnd -> String
 listToString a =
     String.join "\n" (List.map toString a)
+
+
+
+--
+
+
+advancedToString : Parser.Advanced.DeadEnd a Parser.Problem -> String
+advancedToString a =
+    toString (Parser.DeadEnd a.row a.col a.problem)
+
+
+advancedListToString : List (Parser.Advanced.DeadEnd a Parser.Problem) -> String
+advancedListToString a =
+    String.join "\n" (List.map advancedToString a)
