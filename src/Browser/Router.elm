@@ -1,27 +1,15 @@
-module Browser.Router exposing (Router, baseUrl, directoryBaseUrl, fileBaseUrl, init, key, state, urlChanged, urlRequested)
+module Browser.Router exposing (Router, directoryBaseUrl, fileBaseUrl, init, urlChanged, urlRequested)
 
 import Browser
 import Browser.Navigation
 import Url
 
 
-type Router a
-    = Router Browser.Navigation.Key Url.Url a
-
-
-key : Router a -> Browser.Navigation.Key
-key (Router a _ _) =
-    a
-
-
-baseUrl : Router a -> Url.Url
-baseUrl (Router _ a _) =
-    a
-
-
-state : Router a -> a
-state (Router _ _ a) =
-    a
+type alias Router a =
+    { key : Browser.Navigation.Key
+    , baseUrl : Url.Url
+    , state : a
+    }
 
 
 
@@ -41,8 +29,8 @@ urlRequested toBaseUrl req model =
     ( model
     , case req of
         Browser.Internal url ->
-            if toBaseUrl url == baseUrl model.router then
-                Browser.Navigation.pushUrl (key model.router) (Url.toString url)
+            if toBaseUrl url == model.router.baseUrl then
+                Browser.Navigation.pushUrl model.router.key (Url.toString url)
 
             else
                 Browser.Navigation.load (Url.toString url)
@@ -87,7 +75,7 @@ directoryBaseUrl a =
 updateState : a -> { model | router : Router a } -> { model | router : Router a }
 updateState a model =
     { model
-        | router = (\(Router x x2 _) -> Router x x2 a) model.router
+        | router = (\x -> { x | state = a }) model.router
     }
 
 
