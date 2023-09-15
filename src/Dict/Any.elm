@@ -906,18 +906,18 @@ codec k v =
                                 0 ->
                                     Json.Decode.map4
                                         (RBNode_elm_builtin Red)
-                                        (Codec.decoder k)
-                                        (Codec.decoder v)
-                                        (Codec.decoder (codec k v))
-                                        (Codec.decoder (codec k v))
+                                        (Json.Decode.index 1 (Codec.decoder k))
+                                        (Json.Decode.index 2 (Codec.decoder v))
+                                        (Json.Decode.index 3 (Codec.decoder (codec k v)))
+                                        (Json.Decode.index 4 (Codec.decoder (codec k v)))
 
                                 1 ->
                                     Json.Decode.map4
                                         (RBNode_elm_builtin Black)
-                                        (Codec.decoder k)
-                                        (Codec.decoder v)
-                                        (Codec.decoder (codec k v))
-                                        (Codec.decoder (codec k v))
+                                        (Json.Decode.index 1 (Codec.decoder k))
+                                        (Json.Decode.index 2 (Codec.decoder v))
+                                        (Json.Decode.index 3 (Codec.decoder (codec k v)))
+                                        (Json.Decode.index 4 (Codec.decoder (codec k v)))
 
                                 2 ->
                                     Json.Decode.succeed RBEmpty_elm_builtin
