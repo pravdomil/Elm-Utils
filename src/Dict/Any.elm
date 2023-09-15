@@ -900,32 +900,32 @@ codec k v =
 
                 decoder : Json.Decode.Decoder (Dict k v)
                 decoder =
-                    Json.Decode.index 0 Json.Decode.int
-                        |> Json.Decode.andThen
-                            (\x ->
-                                case x of
-                                    0 ->
-                                        Json.Decode.map4
-                                            (RBNode_elm_builtin Red)
-                                            (Codec.decoder k)
-                                            (Codec.decoder v)
-                                            (Codec.decoder (codec k v))
-                                            (Codec.decoder (codec k v))
+                    Json.Decode.andThen
+                        (\x ->
+                            case x of
+                                0 ->
+                                    Json.Decode.map4
+                                        (RBNode_elm_builtin Red)
+                                        (Codec.decoder k)
+                                        (Codec.decoder v)
+                                        (Codec.decoder (codec k v))
+                                        (Codec.decoder (codec k v))
 
-                                    1 ->
-                                        Json.Decode.map4
-                                            (RBNode_elm_builtin Black)
-                                            (Codec.decoder k)
-                                            (Codec.decoder v)
-                                            (Codec.decoder (codec k v))
-                                            (Codec.decoder (codec k v))
+                                1 ->
+                                    Json.Decode.map4
+                                        (RBNode_elm_builtin Black)
+                                        (Codec.decoder k)
+                                        (Codec.decoder v)
+                                        (Codec.decoder (codec k v))
+                                        (Codec.decoder (codec k v))
 
-                                    2 ->
-                                        Json.Decode.succeed RBEmpty_elm_builtin
+                                2 ->
+                                    Json.Decode.succeed RBEmpty_elm_builtin
 
-                                    _ ->
-                                        Json.Decode.fail "Cannot decode dictionary."
-                            )
+                                _ ->
+                                    Json.Decode.fail "Cannot decode dictionary."
+                        )
+                        (Json.Decode.index 0 Json.Decode.int)
             in
             Codec.build encoder decoder
         )
