@@ -17,9 +17,9 @@ type alias Router a =
 
 
 init : (Url.Url -> Url.Url) -> (Url.Url -> a) -> Url.Url -> Browser.Navigation.Key -> Router a
-init toBaseUrl toState url key_ =
+init toBaseUrl toState url key =
     Router
-        key_
+        key
         (toBaseUrl url)
         (toState url)
 
