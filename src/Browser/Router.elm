@@ -41,8 +41,8 @@ urlRequested toBaseUrl a model =
 
 
 urlChanged : (Url.Url -> a) -> Url.Url -> { model | router : Router a } -> ( { model | router : Router a }, Cmd msg )
-urlChanged toState url model =
-    ( updateState (toState url) model
+urlChanged toState a model =
+    ( updateState (toState a) model
     , Cmd.none
     )
 
