@@ -90,4 +90,4 @@ dropAfter needle a =
             String.left (b + 1) a
 
         Nothing ->
-            ""
+            a
