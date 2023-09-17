@@ -85,8 +85,9 @@ updateState a model =
 
 dropAfter : String -> String -> String
 dropAfter pattern a =
-    String.indexes pattern a
-        |> List.reverse
-        |> List.head
-        |> Maybe.map (\x -> String.left (x + 1) a)
-        |> Maybe.withDefault ""
+    case List.head (List.reverse (String.indexes pattern a)) of
+        Just b ->
+            String.left (b + 1) a
+
+        Nothing ->
+            ""
