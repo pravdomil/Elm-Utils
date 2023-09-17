@@ -25,18 +25,18 @@ init toBaseUrl toState url key_ =
 
 
 urlRequested : (Url.Url -> Url.Url) -> Browser.UrlRequest -> { model | router : Router a } -> ( { model | router : Router a }, Cmd msg )
-urlRequested toBaseUrl req model =
+urlRequested toBaseUrl a model =
     ( model
-    , case req of
-        Browser.Internal url ->
-            if toBaseUrl url == model.router.baseUrl then
-                Browser.Navigation.pushUrl model.router.key (Url.toString url)
+    , case a of
+        Browser.Internal b ->
+            if toBaseUrl b == model.router.baseUrl then
+                Browser.Navigation.pushUrl model.router.key (Url.toString b)
 
             else
-                Browser.Navigation.load (Url.toString url)
+                Browser.Navigation.load (Url.toString b)
 
-        Browser.External url ->
-            Browser.Navigation.load url
+        Browser.External b ->
+            Browser.Navigation.load b
     )
 
 
