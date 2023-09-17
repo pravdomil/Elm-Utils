@@ -84,8 +84,8 @@ updateState a model =
 
 
 dropAfter : String -> String -> String
-dropAfter pattern a =
-    case List.head (List.reverse (String.indexes pattern a)) of
+dropAfter needle a =
+    case List.head (List.reverse (String.indexes needle a)) of
         Just b ->
             String.left (b + 1) a
 
