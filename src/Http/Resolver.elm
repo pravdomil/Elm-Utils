@@ -11,11 +11,6 @@ string a =
     Http.stringResolver (helper a)
 
 
-bytes : (Bytes.Bytes -> Result String a) -> Http.Resolver Http.Error a
-bytes a =
-    Http.bytesResolver (helper a)
-
-
 json : Decode.Decoder a -> Http.Resolver Http.Error a
 json a =
     string (\x -> Result.mapError Decode.errorToString (Decode.decodeString a x))
@@ -24,6 +19,11 @@ json a =
 codec : Codec.Codec a -> Http.Resolver Http.Error a
 codec a =
     string (\x -> Result.mapError Decode.errorToString (Codec.decodeString a x))
+
+
+bytes : (Bytes.Bytes -> Result String a) -> Http.Resolver Http.Error a
+bytes a =
+    Http.bytesResolver (helper a)
 
 
 
