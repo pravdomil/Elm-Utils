@@ -11,8 +11,8 @@ string =
 
 
 json : Decode.Decoder a -> Http.Resolver Http.Error a
-json decoder =
-    Http.stringResolver (custom (\x -> Result.mapError Decode.errorToString (Decode.decodeString decoder x)))
+json a =
+    Http.stringResolver (custom (\x -> Result.mapError Decode.errorToString (Decode.decodeString a x)))
 
 
 
