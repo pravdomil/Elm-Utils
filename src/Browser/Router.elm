@@ -2,6 +2,7 @@ module Browser.Router exposing (Router, directoryBaseUrl, fileBaseUrl, init, url
 
 import Browser
 import Browser.Navigation
+import String.Extra2
 import Url
 
 
@@ -62,7 +63,7 @@ fileBaseUrl a =
 directoryBaseUrl : Url.Url -> Url.Url
 directoryBaseUrl a =
     { a
-        | path = dropAfter "/" a.path
+        | path = String.Extra2.leftUntilLast "/" a.path
         , query = Nothing
         , fragment = Nothing
     }
@@ -77,17 +78,3 @@ updateState a model =
     { model
         | router = (\x -> { x | state = a }) model.router
     }
-
-
-
---
-
-
-dropAfter : String -> String -> String
-dropAfter needle a =
-    case List.head (List.reverse (String.indexes needle a)) of
-        Just b ->
-            String.left (b + 1) a
-
-        Nothing ->
-            a
