@@ -6,11 +6,6 @@ import Http
 import Json.Decode as Decode
 
 
-string : Http.Resolver Http.Error String
-string =
-    customString Ok
-
-
 json : Decode.Decoder a -> Http.Resolver Http.Error a
 json a =
     customString (\x -> Result.mapError Decode.errorToString (Decode.decodeString a x))
