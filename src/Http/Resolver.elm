@@ -12,9 +12,9 @@ string a =
     Http.stringResolver (helper a)
 
 
-json : Decode.Decoder a -> Http.Resolver Http.Error a
+json : Json.Decode.Decoder a -> Http.Resolver Http.Error a
 json a =
-    string (\x -> Result.mapError Decode.errorToString (Decode.decodeString a x))
+    string (\x -> Result.mapError Json.Decode.errorToString (Json.Decode.decodeString a x))
 
 
 codec : Codec.Codec a -> Http.Resolver Http.Error a
