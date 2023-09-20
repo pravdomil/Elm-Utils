@@ -12,13 +12,7 @@ string =
 
 json : Decode.Decoder a -> Http.Resolver Http.Error a
 json decoder =
-    Http.stringResolver
-        (custom
-            (\x ->
-                Decode.decodeString decoder x
-                    |> Result.mapError Decode.errorToString
-            )
-        )
+    Http.stringResolver (custom (\x -> Result.mapError Decode.errorToString (Decode.decodeString decoder x)))
 
 
 
