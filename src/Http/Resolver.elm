@@ -8,17 +8,17 @@ import Json.Decode as Decode
 
 string : Http.Resolver Http.Error String
 string =
-    Http.stringResolver (custom Ok)
+    customString Ok
 
 
 json : Decode.Decoder a -> Http.Resolver Http.Error a
 json a =
-    Http.stringResolver (custom (\x -> Result.mapError Decode.errorToString (Decode.decodeString a x)))
+    customString (\x -> Result.mapError Decode.errorToString (Decode.decodeString a x))
 
 
 codec : Codec.Codec a -> Http.Resolver Http.Error a
 codec a =
-    Http.stringResolver (custom (\x -> Result.mapError Decode.errorToString (Codec.decodeString a x)))
+    customString (\x -> Result.mapError Decode.errorToString (Codec.decodeString a x))
 
 
 
