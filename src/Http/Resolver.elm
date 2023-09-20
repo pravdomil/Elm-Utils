@@ -6,24 +6,24 @@ import Http
 import Json.Decode as Decode
 
 
-customString : (String -> Result String a) -> Http.Resolver Http.Error a
-customString a =
+string : (String -> Result String a) -> Http.Resolver Http.Error a
+string a =
     Http.stringResolver (helper a)
 
 
-customBytes : (Bytes.Bytes -> Result String a) -> Http.Resolver Http.Error a
-customBytes a =
+bytes : (Bytes.Bytes -> Result String a) -> Http.Resolver Http.Error a
+bytes a =
     Http.bytesResolver (helper a)
 
 
 json : Decode.Decoder a -> Http.Resolver Http.Error a
 json a =
-    customString (\x -> Result.mapError Decode.errorToString (Decode.decodeString a x))
+    string (\x -> Result.mapError Decode.errorToString (Decode.decodeString a x))
 
 
 codec : Codec.Codec a -> Http.Resolver Http.Error a
 codec a =
-    customString (\x -> Result.mapError Decode.errorToString (Codec.decodeString a x))
+    string (\x -> Result.mapError Decode.errorToString (Codec.decodeString a x))
 
 
 
