@@ -21,6 +21,10 @@ json decoder =
         )
 
 
+
+--
+
+
 customString : (String -> Result String a) -> Http.Resolver Http.Error a
 customString a =
     Http.stringResolver (custom a)
