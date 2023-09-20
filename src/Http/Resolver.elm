@@ -1,6 +1,7 @@
 module Http.Resolver exposing (..)
 
 import Bytes
+import Codec
 import Http
 import Json.Decode as Decode
 
@@ -13,6 +14,11 @@ string =
 json : Decode.Decoder a -> Http.Resolver Http.Error a
 json a =
     Http.stringResolver (custom (\x -> Result.mapError Decode.errorToString (Decode.decodeString a x)))
+
+
+codec : Codec.Codec a -> Http.Resolver Http.Error a
+codec a =
+    Http.stringResolver (custom (\x -> Result.mapError Decode.errorToString (Codec.decodeString a x)))
 
 
 
