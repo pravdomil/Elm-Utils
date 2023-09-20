@@ -27,20 +27,20 @@ codec a =
 
 customString : (String -> Result String a) -> Http.Resolver Http.Error a
 customString a =
-    Http.stringResolver (custom a)
+    Http.stringResolver (helper a)
 
 
 customBytes : (Bytes.Bytes -> Result String a) -> Http.Resolver Http.Error a
 customBytes a =
-    Http.bytesResolver (custom a)
+    Http.bytesResolver (helper a)
 
 
 
 --
 
 
-custom : (body -> Result String a) -> Http.Response body -> Result Http.Error a
-custom fn a =
+helper : (body -> Result String a) -> Http.Response body -> Result Http.Error a
+helper fn a =
     case a of
         Http.BadUrl_ b ->
             Err (Http.BadUrl b)
