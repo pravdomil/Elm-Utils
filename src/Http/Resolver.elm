@@ -47,3 +47,22 @@ helper fn a =
 
         Http.GoodStatus_ _ b ->
             Result.mapError Http.BadBody (fn b)
+
+
+helper2 : (Http.Metadata -> body -> Result Http.Error a) -> Http.Response body -> Result Http.Error a
+helper2 fn a =
+    case a of
+        Http.BadUrl_ b ->
+            Err (Http.BadUrl b)
+
+        Http.Timeout_ ->
+            Err Http.Timeout
+
+        Http.NetworkError_ ->
+            Err Http.NetworkError
+
+        Http.BadStatus_ b c ->
+            fn b c
+
+        Http.GoodStatus_ b c ->
+            fn b c
