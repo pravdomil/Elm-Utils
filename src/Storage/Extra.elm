@@ -25,6 +25,21 @@ set codec storage a =
     Storage.set storage (Maybe.map (Codec.encodeToString codec) a)
 
 
+onChange : msg -> (Maybe a -> msg) -> Codec.Codec a -> Storage.Storage -> Sub msg
+onChange noOperation toMsg codec storage =
+    Storage.onChange
+        noOperation
+        (\x ->
+            case decodeHelper codec x of
+                Ok b ->
+                    toMsg b
+
+                Err _ ->
+                    noOperation
+        )
+        storage
+
+
 
 --
 
