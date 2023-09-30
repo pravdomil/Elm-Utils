@@ -62,8 +62,18 @@ fileBaseUrl a =
 
 directoryBaseUrl : Url.Url -> Url.Url
 directoryBaseUrl a =
+    let
+        path : String
+        path =
+            case String.Extra2.splitByLast "/" a.path of
+                Just ( b, c, _ ) ->
+                    b ++ c
+
+                Nothing ->
+                    a.path
+    in
     { a
-        | path = String.Extra2.leftUntilLast "/" a.path
+        | path = path
         , query = Nothing
         , fragment = Nothing
     }
