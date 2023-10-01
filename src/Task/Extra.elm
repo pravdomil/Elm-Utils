@@ -41,8 +41,8 @@ andAlwaysThen toTask a =
 --
 
 
-two : Task.Task x a -> Task.Task y b -> Task.Task z ( Result x a, Result y b )
-two a b =
+do2 : Task.Task x a -> Task.Task y b -> Task.Task z ( Result x a, Result y b )
+do2 a b =
     andAlwaysThen
         (\x ->
             andAlwaysThen
