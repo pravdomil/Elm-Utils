@@ -41,6 +41,23 @@ andAlwaysThen toTask a =
 --
 
 
+two : Task.Task x a -> Task.Task x b -> Task.Task y ( Result x a, Result x b )
+two a b =
+    andAlwaysThen
+        (\x ->
+            andAlwaysThen
+                (\x2 ->
+                    Task.succeed ( x, x2 )
+                )
+                b
+        )
+        a
+
+
+
+--
+
+
 apply : Task.Task x a -> Task.Task x (a -> b) -> Task.Task x b
 apply task a =
     Task.map2 (\fn x -> fn x) a task
