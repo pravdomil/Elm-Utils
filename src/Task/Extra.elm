@@ -61,3 +61,19 @@ do2 a b =
 apply : Task.Task x a -> Task.Task x (a -> b) -> Task.Task x b
 apply task a =
     Task.map2 (\fn x -> fn x) a task
+
+
+
+--
+
+
+toCmd : Task.Task x a -> Cmd msg
+toCmd a =
+    toCmdHelper (andAlwaysThen Task.succeed a)
+
+
+{-| Patched by Elm FFI.
+-}
+toCmdHelper : Task.Task Never a -> Cmd msg
+toCmdHelper a =
+    Cmd.none
